@@ -1,5 +1,5 @@
 pub fn bubble_sort<T: PartialOrd>(arr: &mut [T]) {
-    if arr.len() < 1 {
+    if arr.len() <= 1 {
         return;
     }
 

@@ -1,19 +1,35 @@
-use std::io;
 use std::time::Instant;
 
-pub fn test_algorithm_in_place<T: Ord + Copy>(target: &mut [T], func: fn(&mut [T])) {
+pub fn test_algorithm_in_place<T: Ord + Copy>(
+    target: &mut [T],
+    func: fn(&mut [T]),
+    func_name: &str,
+) {
     let start = Instant::now();
     func(target);
     let end = Instant::now();
 
-    println!("cost: {}", (end - start).as_micros());
+    assert!(test_is_sorted(target));
+
+    println!("{} process cost: {}", func_name, (end - start).as_micros());
 }
 
-pub fn test_algorithm<T: Ord + Copy>(target: &mut [T], func: fn(&[T]) -> Vec<T>) -> io::Result<()> {
+pub fn test_algorithm<T: Ord + Copy>(target: &mut [T], func: fn(&[T]) -> Vec<T>, func_name: &str) {
     let start = Instant::now();
-    func(target);
+    let result = func(target);
     let end = Instant::now();
 
-    println!("cost: {}", (end - start).as_micros());
-    Ok(())
+    assert!(test_is_sorted(&result));
+
+    println!("{} process cost: {}", func_name, (end - start).as_micros());
+}
+
+pub fn test_is_sorted<T: PartialOrd>(target: &[T]) -> bool {
+    for i in 1..target.len() {
+        if target[i - 1] > target[i] {
+            return false;
+        }
+    }
+
+    true
 }
