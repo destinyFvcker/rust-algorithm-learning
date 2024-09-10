@@ -26,7 +26,7 @@ where
     T: Clone + Default + PartialOrd,
 {
     let mut arr1 = arr[lo..=mid].to_vec();
-    let mut arr2 = arr[mid..=hi].to_vec();
+    let mut arr2 = arr[mid + 1..=hi].to_vec();
 
     let (mut i, mut j) = (0, 0);
     while i < arr1.len() && j < arr2.len() {

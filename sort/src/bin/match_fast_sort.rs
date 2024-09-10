@@ -1,6 +1,7 @@
 use sort::fast_sorts::heap_sort;
 use sort::fast_sorts::merge_sort;
 use sort::fast_sorts::quick_sort;
+use sort::fast_sorts::shell_sort;
 use sort::op_file;
 use sort::test_counter::test_algorithm_in_place;
 use std::io;
@@ -10,6 +11,7 @@ fn main() -> io::Result<()> {
     test_algorithm_in_place(&mut target.clone(), quick_sort, "quick_sort");
     test_algorithm_in_place(&mut target.clone(), merge_sort, "merge_sort");
     test_algorithm_in_place(&mut target.clone(), heap_sort, "heap_sort");
+    test_algorithm_in_place(&mut target.clone(), shell_sort, "shell_sort");
 
     Ok(())
 }
