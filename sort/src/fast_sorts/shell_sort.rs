@@ -1,24 +1,21 @@
-pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
-    // shell sort workks by swiping the value at a given gap
-    // and decreasing the gap to 1
-    let mut count_sublist = values.len() / 2;
-    while count_sublist > 0 {
-        for pos_start in 0..count_sublist {
-            insertion(values, pos_start, count_sublist);
+pub fn shell_sort<T: PartialOrd>(arr: &mut [T]) {
+    let mut sublist_len = arr.len() / 2;
+
+    while sublist_len > 0 {
+        for i in 0..sublist_len {
+            insertion(arr, i, sublist_len);
         }
-        count_sublist /= 2;
+        sublist_len /= 2;
     }
 }
 
-fn insertion<T: Ord + Copy>(values: &mut [T], start: usize, gap: usize) {
-    for i in ((start + gap)..values.len()).step_by(gap) {
-        let val_current = values[i];
-        let mut pos = i;
-        // make swaps
-        while pos >= gap && values[pos - gap] > val_current {
-            values[pos] = values[pos - gap];
-            pos -= gap;
+fn insertion<T: PartialOrd>(arr: &mut [T], start: usize, gap: usize) {
+    let size = arr.len();
+    for i in ((start + gap)..size).step_by(gap) {
+        let mut j = i;
+        while j > start && arr[j - gap] > arr[j] {
+            arr.swap(j - gap, j);
+            j -= gap;
         }
-        values[pos] = val_current;
     }
 }
