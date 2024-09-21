@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::hash::Hash;
 
 struct UnionFind<T> {
@@ -63,6 +64,16 @@ where
                 self.parent.insert(root_y, root_x);
             }
         }
+    }
+
+    pub fn get_disjoint_sets(&mut self) -> HashSet<T> {
+        let mut sets = HashSet::new();
+        let keys: Vec<T> = self.parent.keys().cloned().collect();
+        for element in keys {
+            let root = self.find(&element).clone();
+            sets.insert(root);
+        }
+        sets
     }
 }
 
