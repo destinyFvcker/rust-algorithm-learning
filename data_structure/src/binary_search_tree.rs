@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
 use std::ops::Deref;
-use std::path::Iter;
 
 pub struct BinarySearchTree<T>
 where
