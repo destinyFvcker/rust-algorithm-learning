@@ -1,6 +1,8 @@
 pub mod breadth_first_search;
 pub mod depth_first_search;
 pub mod dijkstra;
+mod simple_bfs;
+mod simple_dfs;
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
