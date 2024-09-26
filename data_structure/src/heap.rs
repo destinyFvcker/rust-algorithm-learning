@@ -96,6 +96,7 @@ where
     pub fn add(&mut self, value: T) {
         self.count += 1;
         self.items.push(value);
+        self.swim(self.count); // 插入后上移
     }
 
     /// 在取出堆顶元素的同时维护堆的性质
@@ -188,5 +189,45 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         self.pop()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_empty_heap() {
+        let mut heap = MaxHeap::new::<i32>();
+        assert_eq!(heap.next(), None);
+    }
+
+    #[test]
+    fn test_min_heap() {
+        let mut heap = MinHeap::new();
+        heap.add(4);
+        heap.add(2);
+        heap.add(9);
+        heap.add(11);
+        assert_eq!(heap.len(), 4);
+        assert_eq!(heap.next(), Some(2));
+        assert_eq!(heap.next(), Some(4));
+        assert_eq!(heap.next(), Some(9));
+        heap.add(1);
+        assert_eq!(heap.next(), Some(1));
+    }
+
+    #[test]
+    fn test_max_heap() {
+        let mut heap = MaxHeap::new();
+        heap.add(4);
+        heap.add(2);
+        heap.add(9);
+        heap.add(11);
+        assert_eq!(heap.len(), 4);
+        assert_eq!(heap.next(), Some(11));
+        assert_eq!(heap.next(), Some(9));
+        assert_eq!(heap.next(), Some(4));
+        heap.add(1);
+        assert_eq!(heap.next(), Some(2));
     }
 }

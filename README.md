@@ -1,2 +1,3 @@
 # rust-algorithm-learning
-learning to imply algorithm by rust
+
+learning to implement algorithm by rust
