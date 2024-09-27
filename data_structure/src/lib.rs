@@ -5,4 +5,5 @@ mod graph;
 mod graph1;
 mod heap;
 mod linked_list;
+mod min_stack;
 mod randomized_set;

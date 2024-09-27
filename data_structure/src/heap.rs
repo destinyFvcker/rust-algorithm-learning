@@ -155,7 +155,7 @@ where
         self.left_child_idx(idx) <= self.count
     }
 
-    /// 递归上移，将新插入的元素与其父节点比较，如果不符合堆的比较规则，就交换位置
+    /// 循环上移，将新插入的元素与其父节点比较，如果不符合堆的比较规则，就交换位置
     fn swim(&mut self, mut idx: usize) {
         while idx > 1 {
             let parent = self.parent_idx(idx); // 解决 Rust 生命周期问题，避免重复借用
