@@ -1,6 +1,7 @@
 pub mod comb_sort;
 pub mod heap_sort;
 pub mod merge_sort;
+pub mod merge_sort_linked_list;
 pub mod quick_sort;
 pub mod shell_sort;
 
