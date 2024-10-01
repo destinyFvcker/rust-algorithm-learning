@@ -6,5 +6,6 @@ mod graph1;
 mod heap;
 mod linked_list;
 mod lru_cache;
+mod median_finder;
 mod min_stack;
 mod randomized_set;
