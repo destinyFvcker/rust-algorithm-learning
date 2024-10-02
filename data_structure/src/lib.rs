@@ -9,3 +9,4 @@ mod lru_cache;
 mod median_finder;
 mod min_stack;
 mod randomized_set;
+mod trie;
