@@ -2,38 +2,54 @@ use std::cmp::Reverse;
 use std::collections::{BTreeMap, BinaryHeap};
 use std::ops::Add;
 
+/// 定义了一种图的类型，是一个嵌套的 BTreeMap，表示从顶点 V 到另一个顶点 V 的带权边，
+/// 其中权重为 E。这种表示方法相比于矩阵表示更适合存储稀疏图。
+///
+/// - 外层的 `BTreeMap<V, BTreeMap<V, E>>` 将每个顶点映射到它的邻居及对应的边权。
 pub type Graph<V, E> = BTreeMap<V, BTreeMap<V, E>>;
 
-// performs Dihsktra's algorithm on the given graph from the given start
+/// performs Dihsktra's algorithm on the given graph from the given start
 // the grach is a positively-weighted undirected graph
-//
-// returns a map that for each reachable vertex associates the distance and the predecessor
-// since the start has no predecessor but is reachable, map[start] will be None
+///
+/// returns a map that for each reachable vertex associates the distance and the predecessor
+/// since the start has no predecessor but is reachable, `map[start]` will be None
 pub fn dijkstra<V, E>(graph: &Graph<V, E>, start: &V) -> BTreeMap<V, Option<(V, E)>>
 where
-    V: Ord + Copy,
+    V: Ord + Copy, // 要求顶点类型和边的权重类型都实现 Copy，方便接下来的操作
     E: Ord + Copy + Add<Output = E>,
 {
+    // 存储从起点start 到各个顶点的最短路径结果
     let mut ans = BTreeMap::new();
+    // 优先队列，从过 Reverse 包装实现从小到大的排序
     let mut prio = BinaryHeap::new();
 
+    // 起点的最短路径是0
     // start is the special case that doesn't have a predecessor
     ans.insert(*start, None);
 
-    for (new, weight) in &graph[start] {
-        ans.insert(*new, Some((*start, *weight)));
-        prio.push(Reverse((*weight, new, start)));
+    // 下面开始处理对于 start 的每一个领居 neighbor
+    for (neighbor, weight) in &graph[start] {
+        // 将领居的距离插入到 ans 之中
+        ans.insert(*neighbor, Some((*start, *weight)));
+        // 将路径信息（包括距离和前驱）加入到优先队列 prio 之中
+        prio.push(Reverse((*weight, neighbor, start))); // 注意这个三元组是按照字典序来判断大小的，
+                                                        // 所以实际上会根据 weight 来进行排序，
+                                                        // 剩下的都是附带信息
     }
 
-    while let Some(Reverse((dist_new, new, prev))) = prio.pop() {
-        match ans[new] {
+    // 函数主循环：处理优先队列(最小)
+    while let Some(Reverse((dist_new, neighbor, prev))) = prio.pop() {
+        // 这里的 match 用于检查当前节点 neighbor 的最短路径是否已经计算过。
+        // 如果 ans[neighbor] 之中的路径信息是我们当前弹出的路径，就继续处理，
+        // 否则跳过当前节点。
+        match ans[neighbor] {
             // what we popped is what is in ans, we'll compute it
             Some((p, d)) if p == *prev && d == dist_new => {}
             // otherwise it's not interesting
             _ => continue,
         }
 
-        for (next, weight) in &graph[new] {
+        for (next, weight) in &graph[neighbor] {
             match ans.get(next) {
                 // if ans[next] is a lower dist than the alternative one, we do nothing
                 Some(Some((_, dist_next))) if dist_new + *weight >= *dist_next => {}
@@ -41,8 +57,8 @@ where
                 Some(None) => {}
                 // the new path is shorter, either new was not in ans or it was farther
                 _ => {
-                    ans.insert(*next, Some((*new, *weight + dist_new)));
-                    prio.push(Reverse((*weight + dist_new, next, new)));
+                    ans.insert(*next, Some((*neighbor, *weight + dist_new)));
+                    prio.push(Reverse((*weight + dist_new, next, neighbor)));
                 }
             }
         }
